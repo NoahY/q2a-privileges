@@ -76,7 +76,7 @@
 						$ppoints = round($upoints/$val*100);
 			// shading
 
-				if(qa_opt('priv_shade') == 0) {
+				if(qa_opt('priv_shading') == 0) {
 
 					if ($ppoints <= 50) {
 						$col = round($ppoints/50*255);
