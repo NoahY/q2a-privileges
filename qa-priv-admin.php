@@ -35,6 +35,7 @@
 				qa_opt('priv_user_field', (bool)qa_post_text('priv_user_field'));
 				qa_opt('priv_title', qa_post_text('priv_title'));
 				qa_opt('priv_hover', qa_post_text('priv_hover'));
+				qa_opt('priv_shading', (int)qa_post_text('priv_shading'));
 				qa_opt('priv_hover_earned', qa_post_text('priv_hover_earned'));
 				$ok = qa_lang_html('admin/options_saved');
 			}
@@ -57,12 +58,23 @@
 				'value' => qa_opt('priv_user_field'),
 				'type' => 'checkbox',
 			);
+			
+			$shading = array('color','grey');
+
+			$fields[] = array(
+				'label' => 'Privilege shading style',
+				'tags' => 'NAME="priv_shading"',
+				'type' => 'select',
+				'options' => $shading,
+				'value' => $shading[qa_opt('priv_shading')],
+			);
 
 			$fields[] = array(
 				'label' => 'Title of user privilege box',
 				'tags' => 'NAME="priv_title"',
 				'value' => qa_opt('priv_title'),
 			);
+			
 			$fields[] = array(
 				'label' => 'Hover text on unearned privilege name',
 				'note' => '# is replaced by required points, % by percentage user already has',

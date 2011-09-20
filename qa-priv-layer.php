@@ -61,49 +61,54 @@
 			foreach ($options as $option) {
 				if(qa_opt($option) == QA_PERMIT_POINTS) {
 					$opoints = (int)qa_opt($option.'_points');
-					if ($upoints > $opoints)
-						$popts[$option] = 100;
-					else 
-						$popts[$option] = round($upoints/$opoints*100);
+					$popts[$option] = $opoints;
 				}
 			}
 			if(!isset($popts)) return;
 			
-			asort($popts);
+			arsort($popts);
 
 			$fields = array();
 			foreach ($popts as $key => $val) {
+					if ($upoints > $val)
+						$ppoints = 100;
+					else 
+						$ppoints = round($upoints/$val*100);
+			// shading
 
-/*
+				if(qa_opt('priv_shade') == 0) {
 
-				if ($val <= 50) {
-					$col = round($val/50*255);
-					$col = dechex($col);
-					if (strlen($col) == 1) $col = '0'.$col;
-					$col = '#'. 'FF' . $col . '00';
+					if ($ppoints <= 50) {
+						$col = round($ppoints/50*255);
+						$col = dechex($col);
+						if (strlen($col) == 1) $col = '0'.$col;
+						$col = '#'. 'FF' . $col . '00';
+					}
+					else {
+						$col = round(($ppoints - 50)/50*255)*(-1)+255;
+						$col = dechex($col);
+						if (strlen($col) == 1) $col = '0'.$col;
+						$col = '#' . $col .'FF' . '00';
+					}
 				}
 				else {
-					$col = round(($val - 50)/50*255)*(-1)+255;
+					$col = (255-round($ppoints/100*255))*3/4;
 					$col = dechex($col);
 					if (strlen($col) == 1) $col = '0'.$col;
-					$col = '#' . $col .'FF' . '00';
+					$col = '#' . $col .$col . $col;
 				}
-*/
-
-				$col = (255-round($val/100*255))*3/4;
-				$col = dechex($col);
-				if (strlen($col) == 1) $col = '0'.$col;
-				$col = '#' . $col .$col . $col;
 				
+			// hover text
+
 				if($val == 100) {
-					$hover = str_replace('#',qa_opt($key.'_points'),qa_opt('priv_hover_earned'));
+					$hover = str_replace('#',$val,qa_opt('priv_hover_earned'));
 				}
 				else {
-					$hover = str_replace('#',qa_opt($key.'_points'),qa_opt('priv_hover'));
-					$hover = str_replace('%',$val,$hover);
+					$hover = str_replace('#',$val,qa_opt('priv_hover'));
+					$hover = str_replace('%',$ppoints,$hover);
 				}
 
-				$text .= '<tr class="priv-row"><td>'.($val == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.qa_lang('profile/'.$key).'</td><td>'.($val == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.$val.'%'.'</td></tr>';
+				$text .= '<tr class="priv-row"><td>'.($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.qa_lang('profile/'.$key).'</td><td>'.($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.$ppoints.'%'.'</td></tr>';
 			}
 			$fields[] = array(
 					'label' => $text,
