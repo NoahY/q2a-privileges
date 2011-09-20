@@ -94,15 +94,21 @@
 				$col = dechex($col);
 				if (strlen($col) == 1) $col = '0'.$col;
 				$col = '#' . $col .$col . $col;
+				
+				if($val == 100) {
+					$hover = str_replace('#',qa_opt($key.'_points'),qa_opt('priv_hover_earned'));
+				}
+				else {
+					$hover = str_replace('#',qa_opt($key.'_points'),qa_opt('priv_hover'));
+					$hover = str_replace('%',$val,$hover);
+				}
 
-
-				error_log($col);
-				$text = ($val == 100? '<b ':'<font ').'style="color:'.$col.'">'.qa_lang('profile/'.$key).': '.$val.'%'.($val == 100? '</b>':'</font>');
-				$fields[] = array(
-						'label' => $text,
-						'type' => 'static',
-				);
+				$text .= '<tr class="priv-row"><td>'.($val == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.qa_lang('profile/'.$key).'</td><td>'.($val == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.$val.'%'.'</td></tr>';
 			}
+			$fields[] = array(
+					'label' => $text,
+					'type' => 'static',
+			);
 
 			$ok = null;
 			$tags = null;
@@ -112,7 +118,7 @@
 				'ok' => ($ok && !isset($error)) ? $ok : null,
 				'style' => 'tall',
 				'tags' => $tags,
-				'title' => 'Permissions by points:',
+				'title' => qa_opt('priv_title'),
 				'fields'=>$fields,
 				'buttons'=>$buttons,
 			);

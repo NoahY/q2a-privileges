@@ -9,6 +9,12 @@
 		function option_default($option) {
 
 			switch($option) {
+				case 'priv_title':
+					return 'Privileges';
+				case 'priv_hover':
+					return 'requires # points; you have % of the points required to earn this privilege';
+				case 'priv_hover_earned':
+					return 'requires # points; you have already earned this privilege';
 				default:
 					return null;
 			}
@@ -27,6 +33,9 @@
 
 				qa_opt('priv_active', (bool)qa_post_text('priv_active'));
 				qa_opt('priv_user_field', (bool)qa_post_text('priv_user_field'));
+				qa_opt('priv_title', qa_post_text('priv_title'));
+				qa_opt('priv_hover', qa_post_text('priv_hover'));
+				qa_opt('priv_hover_earned', qa_post_text('priv_hover_earned'));
 				$ok = qa_lang_html('admin/options_saved');
 			}
 
@@ -47,6 +56,24 @@
 				'tags' => 'NAME="priv_user_field"',
 				'value' => qa_opt('priv_user_field'),
 				'type' => 'checkbox',
+			);
+
+			$fields[] = array(
+				'label' => 'Title of user privilege box',
+				'tags' => 'NAME="priv_title"',
+				'value' => qa_opt('priv_title'),
+			);
+			$fields[] = array(
+				'label' => 'Hover text on unearned privilege name',
+				'note' => '# is replaced by required points, % by percentage user already has',
+				'tags' => 'NAME="priv_hover"',
+				'value' => qa_opt('priv_hover'),
+			);
+			$fields[] = array(
+				'label' => 'Hover text on earned privilege name',
+				'note' => '# is replaced by required points',
+				'tags' => 'NAME="priv_hover_earned"',
+				'value' => qa_opt('priv_hover_earned'),
 			);
 
 			return array(
