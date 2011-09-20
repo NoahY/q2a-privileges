@@ -108,10 +108,10 @@
 					$hover = str_replace('%',$ppoints,$hover);
 				}
 
-				$text .= '<tr class="priv-row"><td>'.($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.qa_lang('profile/'.$key).'</td><td>'.($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.$ppoints.'%'.'</td></tr>';
+				$text[] = ($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.qa_lang('profile/'.$key).'</td><td class="qa-form-tall-label">'.($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.$ppoints.'%';
 			}
 			$fields[] = array(
-					'label' => $text,
+					'label' => implode('</td></tr><tr class="priv-row"><td class="qa-form-tall-label">',$text),
 					'type' => 'static',
 			);
 
