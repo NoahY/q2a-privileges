@@ -100,8 +100,10 @@
 				
 			// hover text
 
-				if($val == 100) {
+				error_log($val);
+				if($ppoints == 100) {
 					$hover = str_replace('#',$val,qa_opt('priv_hover_earned'));
+					error_log($hover);
 				}
 				else {
 					$hover = str_replace('#',$val,qa_opt('priv_hover'));
