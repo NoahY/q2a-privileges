@@ -102,7 +102,6 @@
 
 				if($ppoints == 100) {
 					$hover = str_replace('#',$val,qa_opt('priv_hover_earned'));
-					error_log($hover);
 				}
 				else {
 					$hover = str_replace('#',$val,qa_opt('priv_hover'));
@@ -131,7 +130,7 @@
 			
 		}
 
-	// badge popup notification
+	// popup notification
 
 		function priv_notify() {
 			$userid = qa_get_logged_in_userid();
