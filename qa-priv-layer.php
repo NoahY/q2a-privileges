@@ -4,34 +4,38 @@
 
 	// theme replacement functions
 
-
+		function doctype() {
+			if($this->template == 'user') {
+				if(!isset($this->content['navigation']['sub'])) {
+					$this->content['navigation']['sub'] = array(
+						'profile' => array(
+							'url' => qa_path_html('user/'.$this->_user_handle(), null, qa_opt('site_url')),
+							'label' => $this->_user_handle(),
+							'selected' => !qa_get('tab')?true:false
+						),
+						'privileges' => array(
+							'url' => qa_path_html('user/'.$this->_user_handle(), array('tab'=>'privileges'), qa_opt('site_url')),
+							'label' => qa_opt('priv_title'),
+							'selected' => qa_get('tab')=='privileges'?true:false
+						),
+					);
+				}
+				else {
+					$this->content['navigation']['sub']['privileges'] = array(
+						'url' => qa_path_html('user/'.$this->_user_handle(), array('tab'=>'privileges'), qa_opt('site_url')),
+						'label' => qa_opt('priv_title'),
+						'selected' => qa_get('tab')=='privileges'?true:false
+					);
+				}
+			}
+			qa_html_theme_base::doctype();
+		}
+		
 		function main_parts($content)
 		{
-			if (qa_opt('priv_active')) {
-				if($this->template == 'user') {
-
-					if((bool)qa_opt('priv_user_field')) { 
-					// add user badge list
-
-						if($content['q_list']) {  // paranoia
-						
-							$keys = array_keys($content);
-							$vals = array_values($content);
-
-							$insertBefore = array_search('q_list', $keys);
-
-							$keys2 = array_splice($keys, $insertBefore);
-							$vals2 = array_splice($vals, $insertBefore);
-
-							$keys[] = 'form-priv-list';
-							$vals[] = $this->user_priv_form();
-
-							$content = array_merge(array_combine($keys, $vals), array_combine($keys2, $vals2));
-						}
-						else $content['form-priv-list'] = $this->user_priv_form();  // this shouldn't happen
-					}
-				}
-					
+			if (qa_opt('priv_active') && $this->template == 'user' && qa_get('tab')=='privileges') { 
+					$content = array();
+					$content['form-privileges-list'] = $this->user_priv_form();  // this shouldn't happen
 			}
 
 			qa_html_theme_base::main_parts($content);
