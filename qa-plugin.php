@@ -83,7 +83,7 @@
 		qa_send_notification($uid, '@', $handle, $subject, $body, $subs);
 	}
 
-	//qa_register_plugin_module('event', 'qa-priv-check.php','priv_check','Priv Check');
+	qa_register_plugin_module('event', 'qa-priv-check.php','priv_check','Priv Check');
 
 	qa_register_plugin_module('module', 'qa-priv-admin.php', 'qa_priv_admin', 'Priv Admin');
 

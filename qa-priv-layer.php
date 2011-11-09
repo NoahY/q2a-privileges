@@ -41,6 +41,63 @@
 			qa_html_theme_base::main_parts($content);
 
 		}
+		
+		var $notify = '';
+
+		function head_custom() {
+			qa_html_theme_base::head_custom();
+
+			if (qa_opt('priv_active') && qa_opt('priv_check') && qa_get_logged_in_handle()) {
+				
+				$userid = qa_get_logged_in_userid();
+				
+				$notices = qa_db_read_one_value(
+					qa_db_query_sub(
+						'SELECT meta_value FROM ^usermeta WHERE user_id=# AND meta_key=$ ',
+						$userid,'priv_notify'
+					),
+					true
+				);
+				
+				if($notices) {
+
+					$n = explode(',',$notices);
+					$this->notify = '<div class="notify-container">';
+					
+					$text = count($n)>1?str_replace('#',count($n),qa_opt('priv_notify_text_multi')):str_replace('^privilege',qa_lang('profile/'.$n[0]),qa_opt('priv_notify_text'));
+					
+					$text = str_replace('^profile',qa_path_html('user/'.qa_get_logged_in_handle(),array('tab'=>'privileges'),qa_opt('site_url')),$text);
+						
+					$this->notify .= '<div class="priv-notify notify">'.$text.'<div class="notify-close" onclick="jQuery(this).parent().hide(\'slow\')">x</div></div>';
+					 
+					$this->notify .= '</div>';
+					
+					// remove notification flag
+					
+					qa_db_query_sub(
+						'DELETE FROM ^usermeta WHERE user_id=# AND meta_key=$',
+						$userid, 'priv_notify'
+					);
+/*					
+					$this->output("
+					<script>
+						jQuery('document').ready(function() { jQuery('.notify-container').delay(10000).fadeOut(); });
+					</script>");
+*/
+					$this->output('
+					<style>',qa_opt('priv_css'),'</style>');
+				}
+			}
+		}
+		
+		function body_prefix() {
+			qa_html_theme_base::body_prefix();
+			
+			if ($this->notify) {
+				$this->output($this->notify);
+			}
+		}
+
 
 
 // worker functions
@@ -132,43 +189,6 @@
 				'buttons'=>$buttons,
 			);
 			
-		}
-
-	// popup notification
-
-		function priv_notify() {
-			$userid = qa_get_logged_in_userid();
-			
-			$result = qa_db_read_all_values(
-				qa_db_query_sub(
-					'SELECT badge_slug FROM ^userbadges WHERE user_id=# AND notify>=1',
-					$userid
-				)
-			);
-			
-			if(count($result) > 0) {
-
-				$notice = '<div class="notify-container">';
-				
-				// populate notification list
-				foreach($result as $slug) {
-					$badge_name=qa_badge_lang('badges/'.$slug);
-					if(!qa_opt('badge_'.$slug.'_name')) qa_opt('badge_'.$slug.'_name',$badge_name);
-					$name = qa_opt('badge_'.$slug.'_name');
-					
-					$notice .= '<div class="badge-notify notify">'.qa_badge_lang('badges/badge_notify')."'".$name.'\'!&nbsp;&nbsp;'.qa_badge_lang('badges/badge_notify_profile_pre').'<a href="'.qa_path_html('user/'.qa_get_logged_in_handle()).'">'.qa_badge_lang('badges/badge_notify_profile').'</a><div class="notify-close" onclick="jQuery(this).parent().hide(\'slow\')">x</div></div>';
-				}
-
-				$notice .= '</div>';
-				
-				// remove notification flag
-				
-				qa_db_query_sub(
-					'UPDATE ^userbadges SET notify=0 WHERE user_id=# AND notify>=1',
-					$userid
-				);
-				$this->output($notice);
-			}
 		}
 
 		function priv_getuserfromhandle($handle) {
