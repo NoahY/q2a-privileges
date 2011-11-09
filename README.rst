@@ -10,7 +10,10 @@ This is a plugin for **Question2Answer** that provides advanced privilege functi
 Features
 --------
 
-- currently all it does is show privileges gained by percentage of points
+- adds tab to user profile showing privileges gained by percentage of points
+- two choices of css shading for percentage points
+- optional notification bar and email notifications for privileges gained
+- text fully customizable via admin/plugins
 
 ------------
 Installation
