@@ -6,7 +6,7 @@
 		
 		function process_event($event, $userid, $handle, $cookieid, $params) {
 			if(qa_opt('priv_check') && in_array($event,array('q_post','a_post','c_post','q_claim','a_claim','c_claim','a_select','q_vote_up','a_vote_up'))) {
-				$this->check_privilege($event,$userid,$params);
+				$this->privilege_check($event,$userid,$params);
 			}
 		}
 // worker functions
@@ -41,7 +41,7 @@
 			return $result;
 		}
 
-		function check_privilege($event,$userid,$params) {
+		function privilege_check($event,$userid,$params) {
 
 			// points
 
@@ -70,41 +70,90 @@
 				default:
 					return;
 			}
-				
-			if(in_array($event,array('a_select','q_vote_up','a_vote_up'))) { // other user
-				$userid = qa_db_read_one_value(
+			
+			$this->check_privileges($userid,$event_points);
+
+			// other user
+			
+			if(in_array($event,array('a_select','q_vote_up','a_vote_up'))) {
+				$uid2 = qa_db_read_one_value(
 					qa_db_query_sub(
 						'SELECT userid FROM ^posts WHERE postid=#',
 						$params['postid']
 					),
 					true
-				);			
-				if(!isset($userid)) return;
-			}
+				);
+				
+				if($uid2 && $uid2 != $userid) {
 
-			$p_options = qa_get_permit_options();
+					switch($event) {
+						case 'a_select':
+							$event_points = (int)$options['points_a_selected']*$multi;
+							break;
+						case 'q_vote_up':
+							$event_points = (int)$params['vote'] <= (int)$options['points_q_voted_max_gain']/(int)$options['points_per_q_voted']?(int)$options['points_per_q_voted']*$multi:(int)$options['points_q_voted_max_gain'];
+							break;
+						case 'a_vote_up':
+							$event_points = (int)$params['vote'] <= (int)$options['points_a_voted_max_gain']/(int)$options['points_per_a_voted']?(int)$options['points_per_a_voted']*$multi:(int)$options['points_a_voted_max_gain'];
+							break;
+						default:
+							return;
+					}
+					
+					$this->check_privileges($uid2,$event_points);
+				}
+
+			}
 			
+		}
+		
+		function check_privileges($userid,$event_points) {
+
 			$user = qa_db_select_with_pending(qa_db_user_points_selectspec($userid,true));
 			$upoints = (int)$user['points'];
 			$before_points = (int)$user['points']-$event_points;
 			
-			$notices = '';
+
 			
+			$permr = qa_db_read_one_value(
+				qa_db_query_sub(
+					'SELECT meta_value FROM ^usermeta WHERE user_id=# AND meta_key=$ ',
+					$userid,'priv_notify'
+				),
+				true
+			);
+			
+			// stale perms
+			
+			$stale = array();
+			
+			if($permr) {
+				$perms = explode('^',$permr);
+				$stale = explode(',',$perms[0]); 
+			}
+
+			$p_options = qa_get_permit_options();
+
+			$notices = '';
+
 			foreach ($p_options as $option) {
 				if(qa_opt($option) == QA_PERMIT_POINTS) {
 					$opoints = (int)qa_opt($option.'_points');
-					if($opoints < $upoints && $opoints > $before_points) {
+					if($opoints < $upoints && $opoints > $before_points && !in_array($option,$stale)) {
 						$notices = ($notices?$notices.',':'').$option;
 					}
 				}
 			}
-			if(!$notices) return;
-			qa_db_query_sub(
-				'INSERT INTO ^usermeta (user_id,meta_key,meta_value) VALUES (#,$,$) ON DUPLICATE KEY UPDATE meta_value=$',
-				$userid,'priv_notify',$notices,$notices
-			);
-			if(qa_opt('priv_email_notify_on'))
-				$this->notify($userid, $notices);			
+
+			if($notices) {
+				error_log('1) '.$notices);
+				qa_db_query_sub(
+					'INSERT INTO ^usermeta (user_id,meta_key,meta_value) VALUES (#,$,$) ON DUPLICATE KEY UPDATE meta_value=$',
+					$userid,'priv_notify','^'.$notices,$permr.($perms[1]?',':'').$notices
+				);
+				if(qa_opt('priv_email_notify_on'))
+					$this->notify($userid, $notices);			
+			}
 		}
 
 

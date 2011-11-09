@@ -60,8 +60,16 @@
 				);
 				
 				if($notices) {
+					
+					error_log($notices);
 
-					$n = explode(',',$notices);
+					$all = explode('^',$notices);
+					
+					if(!$all[1]) // no new
+						return;
+						
+					$n = explode(',',$all[1]);
+					
 					$this->notify = '<div class="notify-container">';
 					
 					$text = count($n)>1?str_replace('#',count($n),qa_opt('priv_notify_text_multi')):str_replace('^privilege',qa_lang('profile/'.$n[0]),qa_opt('priv_notify_text'));
@@ -73,11 +81,12 @@
 					$this->notify .= '</div>';
 					
 					// remove notification flag
-					
+
 					qa_db_query_sub(
-						'DELETE FROM ^usermeta WHERE user_id=# AND meta_key=$',
-						$userid, 'priv_notify'
+						'UPDATE ^usermeta SET meta_value=$ WHERE meta_key=$ AND user_id=#',
+						($all[0]?$all[0].',':'').$all[1].'^','priv_notify',$userid
 					);
+					
 /*					
 					$this->output("
 					<script>
