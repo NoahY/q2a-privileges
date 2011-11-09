@@ -102,6 +102,7 @@ Thanks for your participation,
 				qa_opt('priv_css', qa_post_text('priv_css'));
 				qa_opt('priv_check', (bool)qa_post_text('priv_check'));
 				qa_opt('priv_notify_text', qa_post_text('priv_notify_text'));
+				qa_opt('priv_notify_text_multi', qa_post_text('priv_notify_text_multi'));
 				qa_opt('priv_email_notify_on', (bool)qa_post_text('priv_email_notify_on'));
 				qa_opt('priv_email_subject', qa_post_text('priv_email_subject'));
 				qa_opt('priv_email_body', qa_post_text('priv_email_body'));
@@ -168,9 +169,16 @@ Thanks for your participation,
 			);
 
 			$fields[] = array(
-				'label' => 'privilege popup text',
+				'label' => 'privilege popup text (single privilege)',
 				'tags' => 'NAME="priv_notify_text"',
 				'value' => qa_html(qa_opt('priv_notify_text')),
+				'note' => 'substitutes ^profile for profile url, ^privilege for privilege name',
+			);
+
+			$fields[] = array(
+				'label' => 'privilege popup text (multiple privileges)',
+				'tags' => 'NAME="priv_notify_text_multi"',
+				'value' => qa_html(qa_opt('priv_notify_text_multi')),
 				'note' => 'substitutes ^profile for profile url, ^privilege for privilege name',
 			);
 
