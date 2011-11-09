@@ -179,7 +179,7 @@ Thanks for your participation,
 				'label' => 'privilege popup text (multiple privileges)',
 				'tags' => 'NAME="priv_notify_text_multi"',
 				'value' => qa_html(qa_opt('priv_notify_text_multi')),
-				'note' => 'substitutes ^profile for profile url, ^privilege for privilege name',
+				'note' => 'substitutes ^profile for profile url, # for number of privileges',
 			);
 
 			$fields[] = array(
