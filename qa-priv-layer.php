@@ -61,8 +61,6 @@
 				
 				if($notices) {
 					
-					error_log($notices);
-
 					$all = explode('^',$notices);
 					
 					if(!$all[1]) // no new
