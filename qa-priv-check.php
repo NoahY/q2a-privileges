@@ -146,7 +146,6 @@
 			}
 
 			if($notices) {
-				error_log('1) '.$notices);
 				qa_db_query_sub(
 					'INSERT INTO ^usermeta (user_id,meta_key,meta_value) VALUES (#,$,$) ON DUPLICATE KEY UPDATE meta_value=$',
 					$userid,'priv_notify','^'.$notices,$permr.($perms[1]?',':'').$notices
