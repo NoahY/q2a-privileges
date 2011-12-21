@@ -69,7 +69,7 @@
 					$n = explode(',',$all[1]);
 					
 					$this->notify = '<div class="notify-container">';
-					
+
 					$text = count($n)>1?str_replace('#',count($n),qa_opt('priv_notify_text_multi')):str_replace('^privilege',qa_lang('profile/'.$n[0]),qa_opt('priv_notify_text'));
 					
 					$text = str_replace('^profile',qa_path_html('user/'.qa_get_logged_in_handle(),array('tab'=>'privileges'),qa_opt('site_url')),$text);
@@ -138,6 +138,7 @@
 
 			$fields = array();
 			foreach ($popts as $key => $val) {
+
 					if ($upoints > $val)
 						$ppoints = 100;
 					else 
@@ -175,8 +176,16 @@
 					$hover = str_replace('#',$val,qa_opt('priv_hover'));
 					$hover = str_replace('%',$ppoints,$hover);
 				}
+				
+				// fudge
+				
+				if ($key=='permit_retag_cat')
+					$name=qa_lang_html(qa_using_categories() ? 'profile/permit_recat' : 'profile/permit_retag');
+				else 
+					$name = qa_lang('profile/'.$key);
+				
 
-				$text[] = ($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.qa_lang('profile/'.$key).'</td><td class="qa-form-tall-label">'.($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.$ppoints.'%';
+				$text[] = ($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.$name.'</td><td class="qa-form-tall-label">'.($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.$ppoints.'%';
 			}
 			$fields[] = array(
 					'label' => implode('</td></tr><tr class="priv-row"><td class="qa-form-tall-label">',$text),
