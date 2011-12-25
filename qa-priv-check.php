@@ -55,19 +55,35 @@
 				);
 				
 				if($uid2 && $uid2 != $userid) {
-
-					switch($event) {
-						case 'a_select':
-							$event_points = (int)$options['points_a_selected']*$multi;
-							break;
-						case 'q_vote_up':
-							$event_points = (int)$params['vote'] <= (int)$options['points_q_voted_max_gain']/(int)$options['points_per_q_voted']?(int)$options['points_per_q_voted']*$multi:(int)$options['points_q_voted_max_gain'];
-							break;
-						case 'a_vote_up':
-							$event_points = (int)$params['vote'] <= (int)$options['points_a_voted_max_gain']/(int)$options['points_per_a_voted']?(int)$options['points_per_a_voted']*$multi:(int)$options['points_a_voted_max_gain'];
-							break;
-						default:
-							return;
+					if(isset($options['points_per_q_voted'])) { // 1.4
+						switch($event) {
+							case 'a_select':
+								$event_points = (int)$options['points_a_selected']*$multi;
+								break;
+							case 'q_vote_up':
+								$event_points = (int)$params['vote'] <= (int)$options['points_q_voted_max_gain']/(int)$options['points_per_q_voted']?(int)$options['points_per_q_voted']*$multi:(int)$options['points_q_voted_max_gain'];
+								break;
+							case 'a_vote_up':
+								$event_points = (int)$params['vote'] <= (int)$options['points_a_voted_max_gain']/(int)$options['points_per_a_voted']?(int)$options['points_per_a_voted']*$multi:(int)$options['points_a_voted_max_gain'];
+								break;
+							default:
+								return;
+						}
+					}
+					else { // 1.5
+						switch($event) {
+							case 'a_select':
+								$event_points = (int)$options['points_a_selected']*$multi;
+								break;
+							case 'q_vote_up':
+								$event_points = (int)$params['vote'] <= (int)$options['points_q_voted_max_gain']/(int)$options['points_per_q_voted_up']?(int)$options['points_per_q_voted']*$multi:(int)$options['points_q_voted_max_gain'];
+								break;
+							case 'a_vote_up':
+								$event_points = (int)$params['vote'] <= (int)$options['points_a_voted_max_gain']/(int)$options['points_per_a_voted_up']?(int)$options['points_per_a_voted']*$multi:(int)$options['points_a_voted_max_gain'];
+								break;
+							default:
+								return;
+						}
 					}
 					
 					$this->check_privileges($uid2,$event_points);
