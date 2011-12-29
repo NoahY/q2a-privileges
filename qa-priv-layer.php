@@ -178,11 +178,20 @@
 				}
 				
 				// fudge
-				
 				if ($key=='permit_retag_cat')
 					$name=qa_lang_html(qa_using_categories() ? 'profile/permit_recat' : 'profile/permit_retag');
 				else 
 					$name = qa_lang('profile/'.$key);
+					
+				if($name == '[profile/'.$key.']') {
+					global $qa_lang_file_pattern;
+					foreach($qa_lang_file_pattern as $k => $v)	{
+						if(qa_lang($k.'/'.$key) != '['.$k.'/'.$key.']') {
+							$name = qa_lang($k.'/'.$key);
+							break;
+						}
+					}
+				}	
 				
 
 				$text[] = ($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.$name.'</td><td class="qa-form-tall-label">'.($ppoints == 100? '<b ':'<font ').'title="'.$hover.'" style="color:'.$col.'; cursor:pointer">'.$ppoints.'%';
