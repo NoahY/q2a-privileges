@@ -135,7 +135,7 @@ Thanks for your participation,
 				'tags' => 'NAME="priv_shading"',
 				'type' => 'select',
 				'options' => $shading,
-				'value' => $shading[qa_opt('priv_shading')],
+				'value' => @$shading[qa_opt('priv_shading')],
 			);
 
 			$fields[] = array(
