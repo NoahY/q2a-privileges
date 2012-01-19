@@ -5,7 +5,7 @@
 	// theme replacement functions
 
 		function doctype() {
-			if($this->template == 'user' && qa_get_logged_in_handle() === $this->_user_handle()) {
+			if(qa_opt('priv_active') && $this->template == 'user' && qa_get_logged_in_handle() === $this->_user_handle()) {
 				if(!isset($this->content['navigation']['sub'])) {
 					$this->content['navigation']['sub'] = array(
 						'profile' => array(
