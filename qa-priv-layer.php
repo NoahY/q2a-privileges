@@ -74,7 +74,7 @@
 					
 					$text = str_replace('^profile',qa_path_html('user/'.qa_get_logged_in_handle(),array('tab'=>'privileges'),qa_opt('site_url')),$text);
 						
-					$this->notify .= '<div class="priv-notify notify">'.$text.'<div class="notify-close" onclick="jQuery(this).parent().hide(\'slow\')">x</div></div>';
+					$this->notify .= '<div class="priv-notify notify">'.$text.'<div class="notify-close" onclick="jQuery(this).parent().sildeUp(\'fast\')">x</div></div>';
 					 
 					$this->notify .= '</div>';
 					

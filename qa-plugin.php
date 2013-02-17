@@ -3,7 +3,7 @@
 /*
         Plugin Name: Privileges
         Plugin URI: https://github.com/NoahY/q2a-privileges
-        Plugin Update Check URI: https://github.com/NoahY/q2a-privileges/raw/master/qa-plugin.php
+        Plugin Update Check URI: https://raw.github.com/NoahY/q2a-privileges/master/qa-plugin.php
         Plugin Description: Privilege Notification, etc.
         Plugin Version: 0.1
         Plugin Date: 2011-07-30

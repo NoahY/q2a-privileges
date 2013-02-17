@@ -76,10 +76,10 @@
 								$event_points = (int)$options['points_a_selected']*$multi;
 								break;
 							case 'q_vote_up':
-								$event_points = (int)$params['vote'] <= (int)$options['points_q_voted_max_gain']/(int)$options['points_per_q_voted_up']?(int)$options['points_per_q_voted']*$multi:(int)$options['points_q_voted_max_gain'];
+								$event_points = (int)$params['vote'] <= (int)$options['points_q_voted_max_gain']/(int)$options['points_per_q_voted_up']?(int)$options['points_per_q_voted_up']*$multi:(int)$options['points_q_voted_max_gain'];
 								break;
 							case 'a_vote_up':
-								$event_points = (int)$params['vote'] <= (int)$options['points_a_voted_max_gain']/(int)$options['points_per_a_voted_up']?(int)$options['points_per_a_voted']*$multi:(int)$options['points_a_voted_max_gain'];
+								$event_points = (int)$params['vote'] <= (int)$options['points_a_voted_max_gain']/(int)$options['points_per_a_voted_up']?(int)$options['points_per_a_voted_up']*$multi:(int)$options['points_a_voted_max_gain'];
 								break;
 							default:
 								return;
