@@ -127,7 +127,7 @@
 			$user = qa_db_select_with_pending(qa_db_user_points_selectspec($userid,true));
 			$upoints = (int)$user['points'];
 			foreach ($options as $option) {
-				if(qa_opt($option) == QA_PERMIT_POINTS) {
+				if(qa_opt($option) == QA_PERMIT_POINTS or qa_opt($option) == QA_PERMIT_POINTS_CONFIRMED or qa_opt($option) == QA_PERMIT_APPROVED_POINTS) {
 					$opoints = (int)qa_opt($option.'_points');
 					$popts[$option] = $opoints;
 				}
